@@ -6,10 +6,11 @@ Fast Preview Neumorphic Designer and Bootstrap Code Generator
 2. What problem does it fix?
 3. Do people have this problem?
 
+---
 
 1. This is a neumorphism generator targeted specifically at bootstrap 4 and 5.
 2. Working with bootstrap is hard, chaining multiple file watchers to develop a theme in one repository with a preview via components in another is exhausting. The aim of neumorphism is a quick preview of bootstrap code and a simple generator that creates theme-variables.scss.
-3. It takes almost 5 seconds to wait for a code update to trigger a node-sass compilation and storybook rebuild/preview. It is extremely distracting. Further more, bootstrap code is tough, the new utilities/api is exhausting, using actual bootstrap codebase for design is a bad idea. A simple in-browser/in-app preview for neumorphic and neumorphic-like designs with a simple button that generates the _variables overload is a solution to a problem that many designers discover all too late in their tool-chain.
+3. It takes almost 5 seconds to wait for a code update to trigger a node-sass compilation and storybook rebuild/preview. It is extremely distracting. Further more, bootstrap code is tough, the new utilities/api is exhausting, using actual bootstrap code-base for design is a bad idea. A simple in-browser/in-app preview for neumorphic and neumorphic-like designs with a simple button that generates the _variables overload is a solution to a problem that many designers discover all too late in their tool-chain.
 
 
 
