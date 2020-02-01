@@ -1,7 +1,7 @@
 {
   "name": "neumorphism",
   "description": "Fast Preview Neumorphic Designer and Bootstrap Code Generator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "dev": "sapper dev",
     "build": "sapper build --legacy",
