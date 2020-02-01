@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "sapper dev",
     "build": "sapper build --legacy",
-    "export": "sapper export --legacy; rm -fr docs; cp -fr __sapper__/export docs; cp -r static/* docs",
+    "export": "sapper export --legacy; rm -fr docs; mkdir docs; cp -r static/* docs; cp -fr __sapper__/export docs;",
     "pub": "npm run export; git add .; git commit -m \"New Release\"; git push;",
     "start": "node __sapper__/build",
     "cy:run": "cypress run",
