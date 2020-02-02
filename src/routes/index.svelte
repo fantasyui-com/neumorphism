@@ -19,6 +19,8 @@ let borderRadiusFormatter = function(i){
   // remove unwanted human based patterns from string
   if(response.match(/^0.00rem$/)) response = '0rem';
   if(response.match(/^1.00rem$/)) response = '1rem';
+  if(response.match(/^0\./)) response = response.replace(/^0\./,''); // 0.10rem;
+  if(response.match(/0+rem$/)) response = response.replace(/0+rem$/,'rem'); // 0.10rem;
   return response;
 }
 
