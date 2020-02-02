@@ -177,10 +177,7 @@ $box-shadow-inset:            inset 0 1px 2px rgba($black, .075);
         </div>
       </div>
     </div>
-
-    <h4 class="mb-0 mt-5">Custom Settings</h4>
-    <div class="mb-3"><small class="text-muted">Settings for custom utility classes.</small></div>
-
+ 
 
     </div>
 
