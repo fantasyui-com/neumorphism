@@ -7,18 +7,31 @@ const { css } = emotion;
 
 let display = 'sourcecode';
 
+let px = i => `${i}px`;
+let pc = i => `${i}%`;
+let rem = i => `${i}rem`;
+
 const configuration = {
-  borderRadius: '48px'
+  borderRadius: .25,
 };
 
 
 
 const brand = '#74D900';
 
+// LIVE CSS CODE HERE - this CANNOT not used in bootstrap, it is for preview only...
 $: btn = css`
-  border-radius: ${configuration.borderRadius};
+  border-radius: ${rem(configuration.borderRadius)};
   background: linear-gradient(145deg, #e0eef6, #bcc8cf);
   box-shadow: 6px 6px 12px #adb8bf, -6px -6px 12px #f5ffff;
+`;
+//(Math.floor(((configuration.borderRadius*.03) / 4) * 100))
+$: scssVariables = `
+
+$border-radius-sm:            ${rem(configuration.borderRadius - 0.05  )};
+$border-radius:               ${rem(configuration.borderRadius)};
+$border-radius-lg:            ${rem(configuration.borderRadius + 0.05 )};
+
 `;
 
 </script>
@@ -36,7 +49,7 @@ $: btn = css`
 
 <div class="container-fluid" style="min-height: 48rem;">
   <div class="row">
-    <div class="col p-5">
+    <div class="col-8 p-5">
 
       <h4 class="mb-3">Preview</h4>
 
@@ -55,8 +68,20 @@ $: btn = css`
 
     </div>
 
-    <div class="col p-5">
-      One of three columns
+    <div class="col-4 p-5">
+    <h4 class="mb-3">Settings</h4>
+
+    <div class="card-text">
+      <label class="small" for="borderRadius">Border Radius</label>
+      <div class="input-group mb-3">
+        <div class="custom-control custom-range">
+
+          <input type="range" class="custom-range" bind:value={configuration.borderRadius} min="0" max="1" step="0.01" id="borderRadius">
+
+        </div>
+      </div>
+    </div>
+
     </div>
 
   </div>
@@ -73,3 +98,10 @@ $: btn = css`
     </li>
   </ul>
 </nav>
+
+
+<pre>
+<code>
+{scssVariables}
+</code>
+</pre>
