@@ -13,8 +13,6 @@ const configuration = {
 
 
 
-
-
 const brand = '#74D900';
 
 $: btn = css`
@@ -40,7 +38,9 @@ $: btn = css`
   <div class="row">
     <div class="col p-5">
 
-      <h6>Button Preview</h6>
+      <h4 class="mb-3">Preview</h4>
+
+      <h6>Buttons</h6>
       <p>Configure your design, and click generate</p>
 
       <button type="button" class="btn btn-primary {btn}">Primary</button>
