@@ -62,7 +62,7 @@ $: borderRadiusLarge   = borderRadiusFormatter(borderRadiusValue + borderRadiusD
 const brand = '#74D900';
 
 // LIVE CSS CODE HERE - this CANNOT not used in bootstrap, it is for preview only...
-$: btn = css`
+$: neumorphic = css`
   border-radius: ${borderRadiusStandard};
   xbackground: linear-gradient(145deg, #e0eef6, #bcc8cf);
   box-shadow: 6px 6px 12px #adb8bf, -6px -6px 12px #f5ffff;
@@ -81,10 +81,11 @@ $border-radius:               ${borderRadiusStandard};
 $border-radius-sm:            ${borderRadiusSmall};
 $border-radius-lg:            ${borderRadiusLarge};
 
-$box-shadow-sm:               0 .125rem .25rem rgba($black, .075) !default;
-$box-shadow:                  0 .5rem 1rem rgba($black, .15) !default;
-$box-shadow-lg:               0 1rem 3rem rgba($black, .175) !default;
-$box-shadow-inset:            inset 0 1px 2px rgba($black, .075) !default;
+$box-shadow-sm:               0 .125rem .25rem rgba($black, .075);
+$box-shadow:                  0 .5rem 1rem rgba($black, .15);
+$box-shadow-lg:               0 1rem 3rem rgba($black, .175);
+
+$box-shadow-inset:            inset 0 1px 2px rgba($black, .075);
 
 `;
 
@@ -105,41 +106,53 @@ $box-shadow-inset:            inset 0 1px 2px rgba($black, .075) !default;
   <div class="row">
     <div class="col-9 p-5">
 
-      <h4 class="mb-3">Preview</h4>
+      <h4 class="mb-0">Preview</h4>
+      <div class="mb-3"><small class="text-muted">Design rich bootstrap components with neumorphic class.</small></div>
 
-      <h6>Buttons</h6>
-      <p>Configure your design, and click generate</p>
+      <div class="{neumorphic} jumbotron">
+        <h1 class="display-4">Hello, world!</h1>
+        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+        <hr class="my-4">
+        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+      </div>
 
-      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="btn btn-primary {btn}">Primary</button></div>
-      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="btn btn-secondary {btn}">Secondary</button></div>
-      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="btn btn-success {btn}">Success</button></div>
-      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="btn btn-danger {btn}">Danger</button></div>
-      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="btn btn-warning {btn}">Warning</button></div>
-      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="btn btn-info {btn}">Info</button></div>
-      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="btn btn-light {btn}">Light</button></div>
-      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="btn btn-dark {btn}">Dark</button></div>
 
-      <h6>Cards</h6>
-      <p>Configure your design, and click generate</p>
+      <div class="{neumorphic} alert alert-success" role="alert">
+        <h4 class="alert-heading">Well done!</h4>
+        <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
+        <hr>
+        <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+      </div>
+
+      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="neumorphic btn btn-primary {neumorphic}">Primary</button></div>
+      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="neumorphic btn btn-secondary {neumorphic}">Secondary</button></div>
+      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="neumorphic btn btn-success {neumorphic}">Success</button></div>
+      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="neumorphic btn btn-danger {neumorphic}">Danger</button></div>
+      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="neumorphic btn btn-warning {neumorphic}">Warning</button></div>
+      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="neumorphic btn btn-info {neumorphic}">Info</button></div>
+      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="neumorphic btn btn-light {neumorphic}">Light</button></div>
+      <div class="pr-3 pb-3 d-inline-block"><button type="button" class="neumorphic btn btn-dark {neumorphic}">Dark</button></div>
+
 
       <div class="card-deck">
 
 
-          <div class="card text-white bg-primary {card}">
+          <div class="{neumorphic} card text-white bg-primary {card}">
             <div class="card-header">Header</div>
             <div class="card-body">
               <h5 class="card-title">Info card title</h5>
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
             </div>
           </div>
-          <div class="card bg-light {card}">
+          <div class="{neumorphic} card bg-light {card}">
             <div class="card-header">Header</div>
             <div class="card-body">
               <h5 class="card-title">Light card title</h5>
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
             </div>
           </div>
-          <div class="card text-white bg-dark {card}">
+          <div class="{neumorphic} card text-white bg-dark {card}">
             <div class="card-header">Header</div>
             <div class="card-body">
               <h5 class="card-title">Dark card title</h5>
@@ -153,8 +166,8 @@ $box-shadow-inset:            inset 0 1px 2px rgba($black, .075) !default;
     </div>
 
     <div class="col-3 p-5">
-    <h4 class="mb-0">General Settings</h4>
-    <div class="mb-3"><small class="text-muted">Bootstrap-wide settings.</small></div>
+    <h4 class="mb-0">Neumorphic Settings</h4>
+    <div class="mb-3"><small class="text-muted">neumorphic class configuration</small></div>
 
     <div class="card-text">
       <label class="small" for="borderRadius">Border Radius ({borderRadiusStandard})</label>
