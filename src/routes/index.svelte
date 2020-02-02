@@ -14,14 +14,14 @@ let pc = i => `${i}%`;
 let rem = i => `${i}rem`.replace(/^0/,'');
 
 let borderRadiusFormatter = function(i){
+  // format number to to a predictable string state
   let response = sprintf('%.2f', i) + 'rem';
-
-  // remove unwanted patterns
+  // remove unwanted human based patterns from string
   if(response.match(/^0.00rem$/)) response = '0rem';
   if(response.match(/^1.00rem$/)) response = '1rem';
-
   return response;
 }
+
 let borderRadiusInitial = .25;
 let borderRadiusValue = borderRadiusInitial;
 let borderRadiusDelta   = 0.05;
