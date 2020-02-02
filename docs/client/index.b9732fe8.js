@@ -1,1 +1,0 @@
-import{S as s,i as t,s as e,q as a,d as n,n as o}from"./client.809f67cd.js";function c(s){return{c(){this.h()},l(s){a('[data-svelte="svelte-9e030s"]',document.head).forEach(n),this.h()},h(){document.title="neumorphism"},m:o,p:o,i:o,o:o,d:o}}export default class extends s{constructor(s){super(),t(this,s,null,c,e,{})}}
