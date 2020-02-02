@@ -4,16 +4,36 @@
 import emotion from 'emotion';
 const { css } = emotion;
 
+import sprintfJs from "sprintf-js";
+const { sprintf } = sprintfJs;
 
 let display = 'sourcecode';
 
 let px = i => `${i}px`;
 let pc = i => `${i}%`;
-let rem = i => `${i}rem`;
+let rem = i => `${i}rem`.replace(/^0/,'');
 
-const configuration = {
-  borderRadius: .25,
-};
+let borderRadiusFormatter = function(i){
+  let response = sprintf('%.2f', i) + 'rem';
+
+  // remove unwanted patterns
+  if(response.match(/^0.00rem$/)) response = '0rem';
+  if(response.match(/^1.00rem$/)) response = '1rem';
+
+  return response;
+}
+let borderRadiusInitial = .25;
+let borderRadiusValue = borderRadiusInitial;
+let borderRadiusDelta   = 0.05;
+let borderRadiusMin     = borderRadiusDelta;
+let borderRadiusStep    = .01;
+let borderRadiusMax     = 1-borderRadiusDelta;
+$: borderRadiusStandard = borderRadiusFormatter(borderRadiusValue);
+$: borderRadiusSmall   = borderRadiusFormatter(borderRadiusValue - borderRadiusDelta);
+$: borderRadiusLarge   = borderRadiusFormatter(borderRadiusValue + borderRadiusDelta);
+
+
+
 
 
 
@@ -21,16 +41,16 @@ const brand = '#74D900';
 
 // LIVE CSS CODE HERE - this CANNOT not used in bootstrap, it is for preview only...
 $: btn = css`
-  border-radius: ${rem(configuration.borderRadius)};
+  border-radius: ${borderRadiusStandard};
   background: linear-gradient(145deg, #e0eef6, #bcc8cf);
   box-shadow: 6px 6px 12px #adb8bf, -6px -6px 12px #f5ffff;
 `;
 //(Math.floor(((configuration.borderRadius*.03) / 4) * 100))
 $: scssVariables = `
 
-$border-radius-sm:            ${rem(configuration.borderRadius - 0.05  )};
-$border-radius:               ${rem(configuration.borderRadius)};
-$border-radius-lg:            ${rem(configuration.borderRadius + 0.05 )};
+$border-radius:               ${borderRadiusStandard};
+$border-radius-sm:            ${borderRadiusSmall};
+$border-radius-lg:            ${borderRadiusLarge};
 
 `;
 
@@ -72,11 +92,13 @@ $border-radius-lg:            ${rem(configuration.borderRadius + 0.05 )};
     <h4 class="mb-3">Settings</h4>
 
     <div class="card-text">
-      <label class="small" for="borderRadius">Border Radius</label>
+      <label class="small" for="borderRadius">Border Radius ({borderRadiusStandard})</label>
       <div class="input-group mb-3">
         <div class="custom-control custom-range">
 
-          <input type="range" class="custom-range" bind:value={configuration.borderRadius} min="0" max="1" step="0.01" id="borderRadius">
+          <input type="range" class="custom-range" bind:value={borderRadiusValue} min="{borderRadiusMin}" max="{borderRadiusMax}" step="{borderRadiusStep}" id="borderRadius">
+
+
 
         </div>
       </div>
