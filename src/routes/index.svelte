@@ -13,7 +13,12 @@ let px = i => `${i}px`;
 let pc = i => `${i}%`;
 let rem = i => `${i}rem`.replace(/^0/,'');
 
-let borderRadiusFormatter = function(i){
+
+
+
+let borderRadiusFormatter = function(i,min,max){
+  if(i<min) i = min;
+  if(i>max) i = max;
   // format number to to a predictable string state
   let response = sprintf('%.2f', i) + 'rem';
   // remove unwanted human based patterns from string
@@ -28,12 +33,16 @@ let borderRadiusFormatter = function(i){
 let borderRadiusInitial = .25;
 let borderRadiusValue = borderRadiusInitial;
 let borderRadiusDelta   = 0.05;
-let borderRadiusMin     = borderRadiusDelta;
+
+let borderRadiusMinReset     = 0;
+let borderRadiusMaxReset     = 1;
+
+let borderRadiusMin     = 0-borderRadiusDelta;
+let borderRadiusMax     = 1+borderRadiusDelta;
 let borderRadiusStep    = .01;
-let borderRadiusMax     = 1-borderRadiusDelta;
-$: borderRadiusStandard = borderRadiusFormatter(borderRadiusValue);
-$: borderRadiusSmall   = borderRadiusFormatter(borderRadiusValue - borderRadiusDelta);
-$: borderRadiusLarge   = borderRadiusFormatter(borderRadiusValue + borderRadiusDelta);
+$: borderRadiusStandard = borderRadiusFormatter(borderRadiusValue, borderRadiusMinReset, borderRadiusMaxReset);
+$: borderRadiusSmall   = borderRadiusFormatter(borderRadiusValue - borderRadiusDelta, borderRadiusMinReset, borderRadiusMaxReset);
+$: borderRadiusLarge   = borderRadiusFormatter(borderRadiusValue + borderRadiusDelta, borderRadiusMinReset, borderRadiusMaxReset);
 
 
 
