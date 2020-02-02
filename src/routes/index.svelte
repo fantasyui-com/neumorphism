@@ -4,6 +4,10 @@
 // import Range from '../components/Range.svelte';
 
 
+import chroma from 'chroma-js';
+console.log(chroma);
+
+
 import emotion from 'emotion';
 const { css } = emotion;
 
@@ -12,20 +16,31 @@ const { sprintf } = sprintfJs;
 
 let display = 'sourcecode';
 
+let baseColorSelection = '#93a1a1';
+$: baseColor = baseColorSelection;
+$: baseColorLight = chroma(baseColorSelection).brighten(.8).hex();;
+$: baseColorDark = chroma(baseColorSelection).darken().hex();;
+
 let borderRadiusRange = [.2,1.5];
-let borderRadiusFraction = .5;
+let borderRadiusFraction = .2;
 $: borderRadius = (borderRadiusRange[0] + ((borderRadiusRange[1]-borderRadiusRange[0]) * borderRadiusFraction)).toFixed(1);
 
 let gradientAngleRange = [0,359];
-let gradientAngleFraction = .5;
+let gradientAngleFraction = .42;
 $: gradientAngle = (gradientAngleRange[0] + ((gradientAngleRange[1]-gradientAngleRange[0]) * gradientAngleFraction)).toFixed(0);
 
+let neumorphicDistanceRange = [2,16 ];
+let neumorphicDistanceFraction = .25;
+$: neumorphicDistanceOffset = (neumorphicDistanceRange[0] + ((neumorphicDistanceRange[1]-neumorphicDistanceRange[0]) * neumorphicDistanceFraction)).toFixed(0);
+$: neumorphicDistanceBlur = (neumorphicDistanceOffset*1.5).toFixed(0);
+$: neumorphicDistanceSpread = (neumorphicDistanceOffset*.5).toFixed(0);
 
+// NOTE: box-shadow -> offset-x | offset-y | blur-radius | spread-radius | color
 
 $: sourceCode = `
   border-radius: ${borderRadius}rem;
-  background: linear-gradient(${gradientAngle}deg, #e0eef6, #bcc8cf);
-  box-shadow: 6px 6px 12px #adb8bf, -6px -6px 12px #f5ffff;
+  background: linear-gradient(${gradientAngle}deg, ${baseColorDark}, ${baseColorLight});
+  box-shadow: ${neumorphicDistanceOffset}px ${neumorphicDistanceOffset}px ${neumorphicDistanceBlur}px ${neumorphicDistanceSpread}px ${baseColorDark}, -${neumorphicDistanceOffset}px -${neumorphicDistanceOffset}px ${neumorphicDistanceBlur}px ${neumorphicDistanceSpread}px ${baseColorLight};
 `;
 
 $: neumorphic = css`${sourceCode}`;
@@ -53,7 +68,7 @@ ${sourceCode}
 
 <div class="container-fluid" style="min-height: 48rem;">
   <div class="row">
-    <div class="col-9 p-5">
+    <div class="col-9 p-5" style="background:{baseColor};">
 
       <h4 class="mb-0">Preview</h4>
       <div class="mb-3"><small class="text-muted">Design rich bootstrap components with neumorphic class.</small></div>
@@ -114,9 +129,19 @@ ${sourceCode}
 
     </div>
 
-    <div class="col-3 p-5">
+    <div class="col-3 p-5 bg-dark text-white">
     <h4 class="mb-0">Neumorphic Settings</h4>
     <div class="mb-3"><small class="text-muted">neumorphic class configuration</small></div>
+
+
+    <div class="card-text">
+      <label class="small" for="baseColor">Base Color ({baseColorSelection})</label>
+      <div class="input-group mb-3">
+        <div class="custom-control custom-range">
+          <input type="color" bind:value={baseColorSelection} id="baseColor">
+        </div>
+      </div>
+    </div>
 
 
     <div class="card-text">
@@ -127,11 +152,21 @@ ${sourceCode}
         </div>
       </div>
     </div>
+
     <div class="card-text">
       <label class="small" for="gradientAngle">Gradient Angle ({gradientAngleFraction})</label>
       <div class="input-group mb-3">
         <div class="custom-control custom-range">
           <input type="range" class="custom-range" bind:value={gradientAngleFraction} min="0" max="1" step="0.01" id="gradientAngle">
+        </div>
+      </div>
+    </div>
+
+    <div class="card-text">
+      <label class="small" for="neumorphicDistance">Neumorphic Distance ({neumorphicDistanceFraction})</label>
+      <div class="input-group mb-3">
+        <div class="custom-control custom-range">
+          <input type="range" class="custom-range" bind:value={neumorphicDistanceFraction} min="0" max="1" step="0.01" id="neumorphicDistance">
         </div>
       </div>
     </div>
