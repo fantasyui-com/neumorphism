@@ -3,9 +3,14 @@
 
 // import Range from '../components/Range.svelte';
 
+import hljs from 'highlight.js/lib/highlight.js';
+import cssLang from 'highlight.js/lib/languages/less';
+
+hljs.registerLanguage('css', cssLang);
+
 
 import chroma from 'chroma-js';
-console.log(chroma);
+
 
 
 import emotion from 'emotion';
@@ -16,10 +21,14 @@ const { sprintf } = sprintfJs;
 
 let display = 'sourcecode';
 
+
+let colorIntensityFraction = .6;
+
+
 let baseColorSelection = '#93a1a1';
 $: baseColor = baseColorSelection;
-$: baseColorLight = chroma(baseColorSelection).brighten(.8).hex();;
-$: baseColorDark = chroma(baseColorSelection).darken().hex();;
+$: baseColorLight = chroma(baseColorSelection).saturate(.5*colorIntensityFraction).brighten(.5).mix(baseColor ,1-colorIntensityFraction).hex();
+$: baseColorDark = chroma(baseColorSelection).saturate(.2*colorIntensityFraction).darken(1).mix(baseColor ,1-colorIntensityFraction).hex();
 
 let borderRadiusRange = [.2,1.5];
 let borderRadiusFraction = .2;
@@ -29,27 +38,77 @@ let gradientAngleRange = [0,359];
 let gradientAngleFraction = .42;
 $: gradientAngle = (gradientAngleRange[0] + ((gradientAngleRange[1]-gradientAngleRange[0]) * gradientAngleFraction)).toFixed(0);
 
-let neumorphicDistanceRange = [2,16 ];
-let neumorphicDistanceFraction = .25;
-$: neumorphicDistanceOffset = (neumorphicDistanceRange[0] + ((neumorphicDistanceRange[1]-neumorphicDistanceRange[0]) * neumorphicDistanceFraction)).toFixed(0);
-$: neumorphicDistanceBlur = (neumorphicDistanceOffset*1.5).toFixed(0);
-$: neumorphicDistanceSpread = (neumorphicDistanceOffset*.5).toFixed(0);
+
+
+
+
+
+
+
+
+let boxShadowOffsetRange = [2,16];
+let boxShadowOffsetFraction = .32;
+$: boxShadowOffset = (boxShadowOffsetRange[0] + ((boxShadowOffsetRange[1]-boxShadowOffsetRange[0]) * boxShadowOffsetFraction)).toFixed(0);
+
+let boxShadowBlurRange = [0,32];
+let boxShadowBlurFraction = .4;
+$: boxShadowBlur = (boxShadowBlurRange[0] + ((boxShadowBlurRange[1]-boxShadowBlurRange[0]) * boxShadowBlurFraction)).toFixed(0);
+
+let boxShadowSpreadRange = [0,16];
+let boxShadowSpreadFraction = .2;
+$: boxShadowSpread = (boxShadowSpreadRange[0] + ((boxShadowSpreadRange[1]-boxShadowSpreadRange[0]) * boxShadowSpreadFraction)).toFixed(0);
+
+
+
+
+
+
+
+let surfaceModeSelection = 1;
+$: surfaceMode = parseInt(surfaceModeSelection);
 
 // NOTE: box-shadow -> offset-x | offset-y | blur-radius | spread-radius | color
 
-$: sourceCode = `
+$: sourceCode = [
+  // Flat
+  `
+  border-radius: ${borderRadius}rem;
+  background-color: ${baseColor} ! important;
+  box-shadow: ${boxShadowOffset}px ${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, -${boxShadowOffset}px -${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
+  `,
+  // Concave
+  `
   border-radius: ${borderRadius}rem;
   background: linear-gradient(${gradientAngle}deg, ${baseColorDark}, ${baseColorLight});
-  box-shadow: ${neumorphicDistanceOffset}px ${neumorphicDistanceOffset}px ${neumorphicDistanceBlur}px ${neumorphicDistanceSpread}px ${baseColorDark}, -${neumorphicDistanceOffset}px -${neumorphicDistanceOffset}px ${neumorphicDistanceBlur}px ${neumorphicDistanceSpread}px ${baseColorLight};
-`;
+  box-shadow: ${boxShadowOffset}px ${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, -${boxShadowOffset}px -${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
+  `,
+  // Convex
+  `
+  border-radius: ${borderRadius}rem;
+  background: linear-gradient(${gradientAngle}deg, ${baseColorLight}, ${baseColorDark});
+  box-shadow: ${boxShadowOffset}px ${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, -${boxShadowOffset}px -${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
+  `,
+  // Inset
+  `
+  border-radius: ${borderRadius}rem;
+  background: linear-gradient(${gradientAngle}deg, ${baseColorDark}, ${baseColorLight});
+  box-shadow: inset ${boxShadowOffset}px ${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, inset -${boxShadowOffset}px -${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
+  `,
+];
 
-$: neumorphic = css`${sourceCode}`;
+$: neumorphic = css`${sourceCode[surfaceMode]}`;
 
-$: userCode = `
-.neumorphic {
-${sourceCode}
+
+function highlightCss(code){
+  return hljs.highlight('css', code).value
 }
-`;
+
+
+$: userCode = highlightCss(`
+.neumorphic {
+${sourceCode[surfaceMode]}
+}
+`);
 
 
 
@@ -66,9 +125,9 @@ ${sourceCode}
 </style>
 
 
-<div class="container-fluid" style="min-height: 48rem;">
+<div class="container-fluid mb-0" style="min-height: 10rem;">
   <div class="row">
-    <div class="col-9 p-5" style="background:{baseColor};">
+    <div class="col-9 p-5 shadow" style="background:{baseColor};">
 
       <h4 class="mb-0">Preview</h4>
       <div class="mb-3"><small class="text-muted">Design rich bootstrap components with neumorphic class.</small></div>
@@ -129,7 +188,7 @@ ${sourceCode}
 
     </div>
 
-    <div class="col-3 p-5 bg-dark text-white">
+    <div class="col-3 p-5 bg-dark text-white shadow">
     <h4 class="mb-0">Neumorphic Settings</h4>
     <div class="mb-3"><small class="text-muted">neumorphic class configuration</small></div>
 
@@ -145,6 +204,15 @@ ${sourceCode}
 
 
     <div class="card-text">
+      <label class="small" for="colorIntensity">Color Intensity ({colorIntensityFraction})</label>
+      <div class="input-group mb-3">
+        <div class="custom-control custom-range">
+          <input type="range" class="custom-range" bind:value={colorIntensityFraction} min="0" max="1" step="0.01" id="colorIntensity">
+        </div>
+      </div>
+    </div>
+
+    <div class="card-text">
       <label class="small" for="borderRadius">Border Radius ({borderRadiusFraction})</label>
       <div class="input-group mb-3">
         <div class="custom-control custom-range">
@@ -153,21 +221,57 @@ ${sourceCode}
       </div>
     </div>
 
-    <div class="card-text">
+    <div class="card-text" class:text-muted={surfaceMode=='0'}>
       <label class="small" for="gradientAngle">Gradient Angle ({gradientAngleFraction})</label>
       <div class="input-group mb-3">
         <div class="custom-control custom-range">
-          <input type="range" class="custom-range" bind:value={gradientAngleFraction} min="0" max="1" step="0.01" id="gradientAngle">
+          <input type="range" class="custom-range" bind:value={gradientAngleFraction} min="0" max="1" step="0.01" id="gradientAngle" disabled={surfaceMode=='0'} >
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="card-text">
+      <label class="small" for="boxShadowOffset">Distance Offset ({boxShadowOffsetFraction})</label>
+      <div class="input-group mb-3">
+        <div class="custom-control custom-range">
+          <input type="range" class="custom-range" bind:value={boxShadowOffsetFraction} min="0" max="1" step="0.01" id="boxShadowOffset">
         </div>
       </div>
     </div>
 
     <div class="card-text">
-      <label class="small" for="neumorphicDistance">Neumorphic Distance ({neumorphicDistanceFraction})</label>
+      <label class="small" for="boxShadowSpread">Shadow Spread ({boxShadowSpreadFraction})</label>
       <div class="input-group mb-3">
         <div class="custom-control custom-range">
-          <input type="range" class="custom-range" bind:value={neumorphicDistanceFraction} min="0" max="1" step="0.01" id="neumorphicDistance">
+          <input type="range" class="custom-range" bind:value={boxShadowSpreadFraction} min="0" max="1" step="0.01" id="boxShadowSpread">
         </div>
+      </div>
+    </div>
+
+    <div class="card-text">
+      <label class="small" for="boxShadowBlur">Shadow Blur ({boxShadowBlurFraction})</label>
+      <div class="input-group mb-3">
+        <div class="custom-control custom-range">
+          <input type="range" class="custom-range" bind:value={boxShadowBlurFraction} min="0" max="1" step="0.01" id="boxShadowBlur">
+        </div>
+      </div>
+    </div>
+
+
+    <div class="card-text">
+      <label class="small" for="neumorphicDistance">Surface Mode ({surfaceModeSelection})</label>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label class="input-group-text bg-dark text-light" for="surfaceMode">Mode</label>
+        </div>
+        <select class="custom-select" id="surfaceMode" bind:value={surfaceModeSelection}>
+          <option value="0">Flat</option>
+          <option selected value="1">Concave</option>
+          <option value="2">Convex</option>
+          <option value="3">Inset</option>
+        </select>
       </div>
     </div>
 
@@ -178,20 +282,11 @@ ${sourceCode}
 </div>
 
 
-<nav>
-  <ul class="nav nav-tabs">
-    <li class="nav-item">
-      <button class:active='{display === "sourcecode"}' class="nav-link" on:click={()=>display='sourcecode'}>Sourcecode</button>
-    </li>
-    <li class="nav-item">
-      <button class:active='{display === "debugger"}' class="nav-link" on:click={()=>display='debugger'}>Debugger</button>
-    </li>
-  </ul>
-</nav>
 
 
-<pre>
-<code>
-{userCode}
+
+<pre class="mb-0">
+<code class="language-css css hljs">
+{@html userCode}
 </code>
 </pre>

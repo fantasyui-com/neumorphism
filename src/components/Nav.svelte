@@ -6,7 +6,7 @@
 
 </style>
 
-<nav>
+<nav class="bg-dark shadow">
   <ul class="nav nav-tabs">
 
     <li class="nav-item">
