@@ -38,13 +38,27 @@ const { sprintf } = sprintfJs;
 let display = 'sourcecode';
 
 
-let colorIntensityFraction = .6;
+let colorSaturationFraction = .6;
 
+let lightIntensityRange = [.5,3];
+let lightIntensityFraction = .5;
+$: lightIntensity = (lightIntensityRange[0] + ((lightIntensityRange[1]-lightIntensityRange[0]) * lightIntensityFraction)).toFixed(1);
 
 let baseColorSelection = '#93a1a1';
 $: baseColor = baseColorSelection;
-$: baseColorLight = chroma(baseColorSelection).saturate(.5*colorIntensityFraction).brighten(.5).mix(baseColor ,1-colorIntensityFraction).hex();
-$: baseColorDark = chroma(baseColorSelection).saturate(.2*colorIntensityFraction).darken(1).mix(baseColor ,1-colorIntensityFraction).hex();
+
+$: baseColorDark = chroma(baseColorSelection)
+  .darken(lightIntensity)
+  .saturate(.2*colorSaturationFraction)
+  .mix(baseColor ,1-colorSaturationFraction)
+  .hex();
+$: baseColorLight = chroma(baseColorSelection)
+  .brighten(lightIntensity)
+  .saturate(.5*colorSaturationFraction)
+  .mix(baseColor ,1-colorSaturationFraction)
+  .hex();
+
+
 
 let borderRadiusRange = [.2,1.5];
 let borderRadiusFraction = .2;
@@ -80,12 +94,12 @@ function offsetTransformer(boxShadowOffset, lightSource){
 
 
 let boxShadowOffsetRange = [2,16];
-let boxShadowOffsetFraction = .32;
+let boxShadowOffsetFraction = .6;
 $: boxShadowOffsetValue = (boxShadowOffsetRange[0] + ((boxShadowOffsetRange[1]-boxShadowOffsetRange[0]) * boxShadowOffsetFraction)).toFixed(0);
 $: boxShadowOffset = offsetTransformer(boxShadowOffsetValue, lightSource);
 
 let boxShadowBlurRange = [0,32];
-let boxShadowBlurFraction = .4;
+let boxShadowBlurFraction = .7;
 $: boxShadowBlur = (boxShadowBlurRange[0] + ((boxShadowBlurRange[1]-boxShadowBlurRange[0]) * boxShadowBlurFraction)).toFixed(0);
 
 let boxShadowSpreadRange = [0,16];
@@ -238,10 +252,19 @@ ${sourceCode[surfaceMode]}
 
 
     <div class="card-text">
-      <label class="small" for="colorIntensity">Color Intensity ({colorIntensityFraction})</label>
+      <label class="small" for="colorSaturation">Color Saturation ({colorSaturationFraction})</label>
       <div class="input-group mb-3">
         <div class="custom-control custom-range">
-          <input type="range" class="custom-range" bind:value={colorIntensityFraction} min="0" max="1" step="0.01" id="colorIntensity">
+          <input type="range" class="custom-range" bind:value={colorSaturationFraction} min="0" max="1" step="0.01" id="colorSaturation">
+        </div>
+      </div>
+    </div>
+
+    <div class="card-text">
+      <label class="small" for="lightIntensity">Light Intensity ({lightIntensityFraction})</label>
+      <div class="input-group mb-3">
+        <div class="custom-control custom-range">
+          <input type="range" class="custom-range" bind:value={lightIntensityFraction} min="0" max="1" step="0.01" id="lightIntensity">
         </div>
       </div>
     </div>
