@@ -44,7 +44,7 @@ let lightIntensityRange = [.5,3];
 let lightIntensityFraction = .5;
 $: lightIntensity = (lightIntensityRange[0] + ((lightIntensityRange[1]-lightIntensityRange[0]) * lightIntensityFraction)).toFixed(1);
 
-let baseColorSelection = '#93a1a1';
+let baseColorSelection = '#e0e0e0';
 $: baseColor = baseColorSelection;
 
 $: baseColorDark = chroma(baseColorSelection)
@@ -120,27 +120,31 @@ $: surfaceMode = parseInt(surfaceModeSelection);
 $: sourceCode = [
   // Flat
   `
+  /* for use on background-color: ${baseColorSelection}; */
   border-radius: ${borderRadius}rem;
-  background-color: ${baseColor} ! important;
   box-shadow: ${boxShadowOffset[0]}px ${boxShadowOffset[1]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, ${boxShadowOffset[2]}px ${boxShadowOffset[3]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
+  background-color: ${baseColor} ! important;
   `,
   // Concave
   `
+  /* for use on background-color: ${baseColorSelection}; */
   border-radius: ${borderRadius}rem;
-  background: linear-gradient(${gradientAngle}deg, ${baseColorDark}, ${baseColorLight});
   box-shadow: ${boxShadowOffset[0]}px ${boxShadowOffset[1]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, ${boxShadowOffset[2]}px ${boxShadowOffset[3]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
+  background: linear-gradient(${gradientAngle}deg, ${baseColorDark}, ${baseColorLight});
   `,
   // Convex
   `
+  /* for use on background-color: ${baseColorSelection}; */
   border-radius: ${borderRadius}rem;
-  background: linear-gradient(${gradientAngle}deg, ${baseColorLight}, ${baseColorDark});
   box-shadow: ${boxShadowOffset[0]}px ${boxShadowOffset[1]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, ${boxShadowOffset[2]}px ${boxShadowOffset[3]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
+  background: linear-gradient(${gradientAngle}deg, ${baseColorLight}, ${baseColorDark});
   `,
   // Inset
   `
+  /* for use on background-color: ${baseColorSelection}; */
   border-radius: ${borderRadius}rem;
-  background: linear-gradient(${gradientAngle}deg, ${baseColorDark}, ${baseColorLight});
   box-shadow: inset ${boxShadowOffset[0]}px ${boxShadowOffset[1]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, inset ${boxShadowOffset[2]}px ${boxShadowOffset[3]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
+  background: linear-gradient(${gradientAngle}deg, ${baseColorDark}, ${baseColorLight});
   `,
 ];
 
