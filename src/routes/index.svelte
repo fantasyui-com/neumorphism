@@ -3,10 +3,26 @@
 
 // import Range from '../components/Range.svelte';
 
+
+
+
 import hljs from 'highlight.js/lib/highlight.js';
 import cssLang from 'highlight.js/lib/languages/less';
+import htmlLang from 'highlight.js/lib/languages/xml';
 
 hljs.registerLanguage('css', cssLang);
+hljs.registerLanguage('html', htmlLang);
+
+let code = `
+<div class="neumorphic jumbotron">
+  <h1 class="display-4">Hello, world!</h1>
+  <p class="lead">This is a simple jumbotron...</p>
+  <hr class="my-4">
+  <p>It uses utility classes for typography and spacing...</p>
+  <a class="btn btn-primary btn-lg" href="." role="button">Learn more</a>
+</div>
+`;
+let example = hljs.highlight('html', code).value.replace(/neumorphic/,'<span class="text-danger">neumorphic</span>')
 
 
 import chroma from 'chroma-js';
@@ -43,12 +59,30 @@ $: gradientAngle = (gradientAngleRange[0] + ((gradientAngleRange[1]-gradientAngl
 
 
 
+let lightSourceSelection = 0;
+$: lightSource = parseInt(lightSourceSelection);
 
+function offsetTransformer(boxShadowOffset, lightSource){
+
+  if(lightSource == 0){
+    return [boxShadowOffset,boxShadowOffset,-boxShadowOffset,-boxShadowOffset]
+  }else if (lightSource == 1) {
+    return [-boxShadowOffset,boxShadowOffset,boxShadowOffset,-boxShadowOffset]
+  }else if (lightSource == 2) {
+    return [-boxShadowOffset,-boxShadowOffset,boxShadowOffset,boxShadowOffset]
+  }else if (lightSource == 3) {
+    return [boxShadowOffset,-boxShadowOffset,-boxShadowOffset,boxShadowOffset]
+  } else {
+    return [boxShadowOffset,boxShadowOffset,boxShadowOffset,boxShadowOffset]
+  }
+
+}
 
 
 let boxShadowOffsetRange = [2,16];
 let boxShadowOffsetFraction = .32;
-$: boxShadowOffset = (boxShadowOffsetRange[0] + ((boxShadowOffsetRange[1]-boxShadowOffsetRange[0]) * boxShadowOffsetFraction)).toFixed(0);
+let boxShadowOffsetValue = (boxShadowOffsetRange[0] + ((boxShadowOffsetRange[1]-boxShadowOffsetRange[0]) * boxShadowOffsetFraction)).toFixed(0);
+$: boxShadowOffset = offsetTransformer(boxShadowOffsetValue, lightSource);
 
 let boxShadowBlurRange = [0,32];
 let boxShadowBlurFraction = .4;
@@ -74,25 +108,25 @@ $: sourceCode = [
   `
   border-radius: ${borderRadius}rem;
   background-color: ${baseColor} ! important;
-  box-shadow: ${boxShadowOffset}px ${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, -${boxShadowOffset}px -${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
+  box-shadow: ${boxShadowOffset[0]}px ${boxShadowOffset[1]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, ${boxShadowOffset[2]}px ${boxShadowOffset[3]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
   `,
   // Concave
   `
   border-radius: ${borderRadius}rem;
   background: linear-gradient(${gradientAngle}deg, ${baseColorDark}, ${baseColorLight});
-  box-shadow: ${boxShadowOffset}px ${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, -${boxShadowOffset}px -${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
+  box-shadow: ${boxShadowOffset[0]}px ${boxShadowOffset[1]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, ${boxShadowOffset[2]}px ${boxShadowOffset[3]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
   `,
   // Convex
   `
   border-radius: ${borderRadius}rem;
   background: linear-gradient(${gradientAngle}deg, ${baseColorLight}, ${baseColorDark});
-  box-shadow: ${boxShadowOffset}px ${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, -${boxShadowOffset}px -${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
+  box-shadow: ${boxShadowOffset[0]}px ${boxShadowOffset[1]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, ${boxShadowOffset[2]}px ${boxShadowOffset[3]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
   `,
   // Inset
   `
   border-radius: ${borderRadius}rem;
   background: linear-gradient(${gradientAngle}deg, ${baseColorDark}, ${baseColorLight});
-  box-shadow: inset ${boxShadowOffset}px ${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, inset -${boxShadowOffset}px -${boxShadowOffset}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
+  box-shadow: inset ${boxShadowOffset[0]}px ${boxShadowOffset[1]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorDark}, inset ${boxShadowOffset[2]}px ${boxShadowOffset[3]}px ${boxShadowBlur}px ${boxShadowSpread}px ${baseColorLight};
   `,
 ];
 
@@ -127,7 +161,7 @@ ${sourceCode[surfaceMode]}
 
 <div class="container-fluid mb-0" style="min-height: 10rem;">
   <div class="row">
-    <div class="col-9 p-5 shadow" style="background:{baseColor};">
+    <div class="col-12 col-md-6 col-lg-9 p-5 shadow" style="background:{baseColor};">
 
       <h4 class="mb-0">Preview</h4>
       <div class="mb-3"><small class="text-muted">Design rich bootstrap components with neumorphic class.</small></div>
@@ -175,20 +209,14 @@ ${sourceCode[surfaceMode]}
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
             </div>
           </div>
-          <div class="{neumorphic} card text-white bg-dark">
-            <div class="card-header">Header</div>
-            <div class="card-body">
-              <h5 class="card-title">Dark card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            </div>
-          </div>
+ 
 
 
     </div>
 
     </div>
 
-    <div class="col-3 p-5 bg-dark text-white shadow">
+    <div class="col-12 col-md-6 col-lg-3 p-5 bg-dark text-white shadow">
     <h4 class="mb-0">Neumorphic Settings</h4>
     <div class="mb-3"><small class="text-muted">neumorphic class configuration</small></div>
 
@@ -209,6 +237,36 @@ ${sourceCode[surfaceMode]}
         <div class="custom-control custom-range">
           <input type="range" class="custom-range" bind:value={colorIntensityFraction} min="0" max="1" step="0.01" id="colorIntensity">
         </div>
+      </div>
+    </div>
+
+    <div class="card-text">
+      <label class="small" for="surfaceMode">Surface Mode ({surfaceModeSelection})</label>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label class="input-group-text bg-dark text-light" for="surfaceMode">Surface</label>
+        </div>
+        <select class="custom-select" id="surfaceMode" bind:value={surfaceModeSelection}>
+          <option value="0">Flat</option>
+          <option selected value="1">Concave</option>
+          <option value="2">Convex</option>
+          <option value="3">Inset</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card-text">
+      <label class="small" for="lightSource">Light Source ({lightSourceSelection})</label>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label class="input-group-text bg-dark text-light" for="lightSource">Light</label>
+        </div>
+        <select class="custom-select" id="lightSource" bind:value={lightSourceSelection}>
+          <option selected value="0">&nwarr; NW</option>
+          <option value="1">&nearr; NE</option>
+          <option value="2">&searr; SE</option>
+          <option value="3">&swarr; SW</option>
+        </select>
       </div>
     </div>
 
@@ -260,20 +318,6 @@ ${sourceCode[surfaceMode]}
     </div>
 
 
-    <div class="card-text">
-      <label class="small" for="neumorphicDistance">Surface Mode ({surfaceModeSelection})</label>
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <label class="input-group-text bg-dark text-light" for="surfaceMode">Mode</label>
-        </div>
-        <select class="custom-select" id="surfaceMode" bind:value={surfaceModeSelection}>
-          <option value="0">Flat</option>
-          <option selected value="1">Concave</option>
-          <option value="2">Convex</option>
-          <option value="3">Inset</option>
-        </select>
-      </div>
-    </div>
 
 
     </div>
@@ -285,8 +329,21 @@ ${sourceCode[surfaceMode]}
 
 
 
-<pre class="mb-0">
+<p class="small text-muted shadow-sm mb-0 p-3">Place the generated CSS in your application code.</p>
+
+<pre class="mb-0 shadow">
 <code class="language-css css hljs">
 {@html userCode}
 </code>
 </pre>
+
+<p class="small text-muted shadow-sm mb-0 p-3">Apply the <span class="text-danger">neumorphic</span> class where needed. Jumbotron, for example: </p>
+
+<pre class="mb-0 shadow">
+  <code class="language-html html hljs rounded ">
+    {@html example}
+  </code>
+</pre>
+
+
+<p class="small text-muted shadow-sm mb-0 p-3">Visit <a href="https://github.com/fantasyui-com/neumorphism" rel="noopener noreferrer" target="_blank">https://github.com/fantasyui-com/neumorphism</a> for more.</p>
