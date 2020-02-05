@@ -81,7 +81,7 @@ function offsetTransformer(boxShadowOffset, lightSource){
 
 let boxShadowOffsetRange = [2,16];
 let boxShadowOffsetFraction = .32;
-let boxShadowOffsetValue = (boxShadowOffsetRange[0] + ((boxShadowOffsetRange[1]-boxShadowOffsetRange[0]) * boxShadowOffsetFraction)).toFixed(0);
+$: boxShadowOffsetValue = (boxShadowOffsetRange[0] + ((boxShadowOffsetRange[1]-boxShadowOffsetRange[0]) * boxShadowOffsetFraction)).toFixed(0);
 $: boxShadowOffset = offsetTransformer(boxShadowOffsetValue, lightSource);
 
 let boxShadowBlurRange = [0,32];
@@ -163,8 +163,7 @@ ${sourceCode[surfaceMode]}
   <div class="row">
     <div class="col-12 col-md-6 col-lg-9 p-5 shadow" style="background:{baseColor};">
 
-      <h4 class="mb-0">Preview</h4>
-      <div class="mb-3"><small class="text-muted">Design rich bootstrap components with neumorphic class.</small></div>
+      <h4 class="mb-4">Preview</h4>
 
       <!-- <div class="{neumorphic} jumbotron">
         <h1 class="display-4">Hello, world!</h1>
@@ -175,7 +174,14 @@ ${sourceCode[surfaceMode]}
       </div> -->
 
 
-      <div class="{neumorphic} alert alert-success" role="alert">
+      <div class="{neumorphic} alert alert-success mb-5" role="alert">
+        <h4 class="alert-heading">Well done!</h4>
+        <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
+        <hr>
+        <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+      </div>
+
+      <div class="{neumorphic} alert alert-success mb-5 border-0" role="alert">
         <h4 class="alert-heading">Well done!</h4>
         <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
         <hr>
@@ -192,7 +198,7 @@ ${sourceCode[surfaceMode]}
       <div class="pr-3 pb-3 d-inline-block"><button type="button" class="{neumorphic} btn btn-dark">Dark</button></div>
 
 
-      <div class="card-deck">
+      <div class="card-deck mt-4">
 
 
           <div class="{neumorphic} card text-white bg-primary">
@@ -209,7 +215,7 @@ ${sourceCode[surfaceMode]}
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
             </div>
           </div>
- 
+
 
 
     </div>
